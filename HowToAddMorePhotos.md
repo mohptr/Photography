@@ -19,7 +19,6 @@ This guide explains how to add new photos to your existing photography site.
 3️⃣ Save your changes to manifest.json.
 
 4️⃣ Commit and push your updates to GitHub:
-   git add manifest.json
    git commit -m "Added new images"
    git push origin main
 
