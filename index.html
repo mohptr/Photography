@@ -57,7 +57,6 @@
       border-bottom: 3px solid transparent;
     }
 
-    /* Text glow animation for active tab */
     @keyframes pulseTextGlow {
       0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff; }
       50% { text-shadow: 0 0 15px #fff, 0 0 30px #fff; }
@@ -92,7 +91,7 @@
 
     .thumb {
       width: 100%;
-      padding-top: 75%; /* 4:3 aspect ratio */
+      padding-top: 75%;
       position: relative;
       overflow: hidden;
     }
@@ -189,37 +188,29 @@
   </style>
 </head>
 <body>
-  <!-- Hero -->
   <div class="hero" id="hero"></div>
 
-  <!-- Tabs -->
   <div class="tabs">
     <div class="tab active" data-target="portraits">Portraits</div>
     <div class="tab" data-target="polaroids">Polaroids</div>
   </div>
 
-  <!-- Galleries -->
   <div id="portraits" class="gallery active"></div>
   <div id="polaroids" class="gallery"></div>
 
-  <!-- Popup -->
   <div id="popup">
     <img id="popup-img" src="" alt="Full Image"/>
     <div class="exif" id="popup-exif"></div>
   </div>
 
-  <!-- Footer -->
   <footer>
-    <div class="left">
-      PHOTOGRAPHY <span class="name">Abhisek Mohapatra</span>
-    </div>
+    <div class="left">PHOTOGRAPHY <span class="name">Abhisek Mohapatra</span></div>
     <div class="right">
       <a href="https://www.TheAbhisek.com" target="_blank">About</a>
       <a href="https://www.TheAbhisek.com/contact" target="_blank">Contact</a>
     </div>
   </footer>
 
-  <!-- Include EXIF.js -->
   <script src="assets/js/exif.js"></script>
 
   <script>
@@ -228,14 +219,12 @@
     const popupImg = document.getElementById("popup-img");
     const popupExif = document.getElementById("popup-exif");
     const HERO_INTERVAL = 10000;
-
     const tabs = document.querySelectorAll(".tab");
     const galleries = document.querySelectorAll(".gallery");
 
     function activateTab(targetId) {
       tabs.forEach(tab => tab.classList.remove("active"));
       galleries.forEach(g => g.classList.remove("active"));
-
       document.querySelector(`.tab[data-target="${targetId}"]`).classList.add("active");
       document.getElementById(targetId).classList.add("active");
     }
@@ -244,44 +233,38 @@
       tab.addEventListener("click", () => activateTab(tab.dataset.target));
     });
 
-    function populateGallery(containerId, images, folderPath) {
+    function populateGallery(containerId, images, baseUrl) {
       const container = document.getElementById(containerId);
-      container.innerHTML = ""; // clear old images
+      container.innerHTML = "";
       images.forEach(src => {
         const article = document.createElement("article");
         article.className = "thumb";
         const img = document.createElement("img");
-        img.src = `${folderPath}${src}`;
+        img.src = baseUrl + src;
         article.appendChild(img);
         container.appendChild(article);
 
         img.addEventListener("click", () => {
           popupImg.src = img.src;
-
           EXIF.getData(img, function() {
             const model = EXIF.getTag(this, "Model");
             const fnumber = EXIF.getTag(this, "FNumber");
             const exposure = EXIF.getTag(this, "ExposureTime");
             const iso = EXIF.getTag(this, "ISOSpeedRatings");
-
             let exifParts = [];
             if (model) exifParts.push(`Model: ${model}`);
             if (fnumber) exifParts.push(`FNumber: ${fnumber}`);
             if (exposure) exifParts.push(`Exposure: ${exposure}`);
             if (iso) exifParts.push(`ISO: ${iso}`);
-
             popupExif.innerText = exifParts.join(' | ');
           });
-
           popup.style.display = "flex";
         });
       });
     }
 
     popup.addEventListener("click", (e) => {
-      if (e.target === popup) {
-        popup.style.display = "none";
-      }
+      if (e.target === popup) popup.style.display = "none";
     });
 
     async function initSite() {
@@ -289,6 +272,7 @@
         const response = await fetch("manifest.json");
         const data = await response.json();
 
+        const baseUrl = data.baseUrl || "";
         const heroImages = data.heroImages || [];
         const portraits = data.galleryImages || [];
         const polaroids = data.polaroids || [];
@@ -296,7 +280,7 @@
         // HERO SLIDESHOW
         heroImages.forEach((src, i) => {
           const img = document.createElement("img");
-          img.src = `assets/coverimages/${src}`;
+          img.src = baseUrl + src;
           if (i === 0) img.classList.add("active");
           hero.appendChild(img);
         });
@@ -310,8 +294,8 @@
         }, HERO_INTERVAL);
 
         // Populate galleries
-        populateGallery("portraits", portraits, "Images/fulls/");
-        populateGallery("polaroids", polaroids, "Images/polaroids/");
+        populateGallery("portraits", portraits, baseUrl);
+        populateGallery("polaroids", polaroids, baseUrl);
 
       } catch (err) {
         console.error("Error loading manifest:", err);
