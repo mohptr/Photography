@@ -89,25 +89,27 @@
           popupImg.src = img.src;
           popupExif.innerText = "";
 
-          // Skip EXIF for cross-origin images
-          try {
-            const isSameOrigin = new URL(img.src).origin === window.location.origin;
-            if (isSameOrigin) {
-              EXIF.getData(img, function() {
-                const model = EXIF.getTag(this, "Model");
-                const fnumber = EXIF.getTag(this, "FNumber");
-                const exposure = EXIF.getTag(this, "ExposureTime");
-                const iso = EXIF.getTag(this, "ISOSpeedRatings");
-                const exifParts = [];
-                if(model) exifParts.push(`Model: ${model}`);
-                if(fnumber) exifParts.push(`FNumber: ${fnumber}`);
-                if(exposure) exifParts.push(`Exposure: ${exposure}`);
-                if(iso) exifParts.push(`ISO: ${iso}`);
-                popupExif.innerText = exifParts.join(' | ');
-              });
+          // Only read EXIF for Portraits
+          if(containerId === "portraits") {
+            try {
+              const isSameOrigin = new URL(img.src).origin === window.location.origin;
+              if (isSameOrigin) {
+                EXIF.getData(img, function() {
+                  const model = EXIF.getTag(this, "Model");
+                  const fnumber = EXIF.getTag(this, "FNumber");
+                  const exposure = EXIF.getTag(this, "ExposureTime");
+                  const iso = EXIF.getTag(this, "ISOSpeedRatings");
+                  const exifParts = [];
+                  if(model) exifParts.push(`Model: ${model}`);
+                  if(fnumber) exifParts.push(`FNumber: ${fnumber}`);
+                  if(exposure) exifParts.push(`Exposure: ${exposure}`);
+                  if(iso) exifParts.push(`ISO: ${iso}`);
+                  popupExif.innerText = exifParts.join(' | ');
+                });
+              }
+            } catch(e) {
+              console.warn("Skipping EXIF for cross-origin image:", img.src);
             }
-          } catch(e) {
-            console.warn("Skipping EXIF for cross-origin image:", img.src);
           }
 
           popup.style.display = "flex";
