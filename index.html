@@ -6,23 +6,62 @@
   <title>Abhisek Mohapatra Photography</title>
   <style>
     body { margin:0; font-family:Arial,sans-serif; background:#000; color:#fff; overflow-x:hidden; }
+    
+    /* HERO SECTION */
     .hero { height:100vh; width:100%; position:relative; overflow:hidden; }
     .hero img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:contain; opacity:0; transition:opacity 2s ease-in-out; }
     .hero img.active { opacity:1; z-index:1; }
+
+    /* NAVIGATION BAR - TALVA STYLE */
+    .main-nav {
+      background:#fff;
+      color:#000;
+      text-align:center;
+      font-family:'Georgia', serif;
+      padding:30px 0 15px 0;
+      font-size:1.2rem;
+      text-transform:uppercase;
+      letter-spacing:4px;
+    }
+    .main-nav .site-title {
+      display:block;
+      font-weight:400;
+      font-size:2rem;
+      margin-bottom:10px;
+    }
+    .main-nav .nav-links a {
+      text-decoration:none;
+      color:#000;
+      margin:0 25px;
+      font-weight:500;
+      font-size:1rem;
+      transition:0.3s ease;
+    }
+    .main-nav .nav-links a:hover {
+      color:#20c997;
+    }
+
+    /* TABS FOR GALLERIES */
     .tabs { display:flex; justify-content:center; border-bottom:2px solid #444; margin:20px 0 0 0; }
     .tab { padding:10px 30px; margin:0 5px; cursor:pointer; color:#aaa; font-weight:bold; transition:0.3s ease; border-bottom:3px solid transparent; }
     @keyframes pulseTextGlow { 0%{text-shadow:0 0 5px #fff,0 0 10px #fff;} 50%{text-shadow:0 0 15px #fff,0 0 30px #fff;} 100%{text-shadow:0 0 5px #fff,0 0 10px #fff;} }
     .tab.active { color:#fff; animation:pulseTextGlow 4s infinite; }
     .tab.active[data-target="portraits"]{ border-bottom:3px solid #20c997; }
     .tab.active[data-target="polaroids"]{ border-bottom:3px solid #ff7f50; }
+
+    /* GALLERY GRID */
     .gallery { display:grid; grid-template-columns:repeat(4,1fr); gap:0; background:#1a1a1a; display:none; }
     .gallery.active { display:grid; }
     .thumb { width:100%; padding-top:75%; position:relative; overflow:hidden; }
     .thumb img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transition:transform 0.3s ease; }
     .thumb img:hover { transform:scale(1.05); cursor:pointer; }
+
+    /* POPUP */
     #popup { position:fixed; top:0; left:0; width:100%; height:100%; display:none; z-index:1001; justify-content:center; align-items:center; background:rgba(0,0,0,0.3); backdrop-filter:blur(10px); }
     #popup img { max-width:90vw; max-height:90vh; width:auto; height:auto; box-shadow:0 10px 30px rgba(0,0,0,0.7); border-radius:5px; }
     #popup .exif { position:absolute; bottom:10px; left:10px; color:#fff; background:rgba(0,0,0,0.5); padding:5px 10px; font-size:0.9rem; border-radius:4px; }
+
+    /* FOOTER */
     footer { background-color:#1a1a1a; padding:40px; display:flex; justify-content:space-between; align-items:center; font-weight:300; letter-spacing:1.5px; font-size:1rem; }
     footer .left { color:#fff; } footer .left .name { color:#b3b3b3; margin-left:5px; }
     footer .right a { text-decoration:none; font-weight:bold; color:#fff; font-size:1rem; border:2px solid orange; padding:10px 22px; border-radius:50px; background:#1a1a1a; margin-left:15px; transition:0.3s ease; }
@@ -30,21 +69,36 @@
   </style>
 </head>
 <body>
+  <!-- HERO SECTION -->
   <div class="hero" id="hero"></div>
 
+  <!-- NAVIGATION BELOW HERO -->
+  <nav class="main-nav" id="mainNav">
+    <span class="site-title">ABHISEK MOHAPATRA</span>
+    <div class="nav-links">
+      <a href="https://www.TheAbhisek.com" target="_blank">About</a>
+      <a href="https://www.TheAbhisek.com/journal" target="_blank">Journal</a>
+      <a href="https://www.TheAbhisek.com/contact" target="_blank">Contact</a>
+    </div>
+  </nav>
+
+  <!-- TABS FOR GALLERIES -->
   <div class="tabs">
     <div class="tab active" data-target="portraits">Portraits</div>
     <div class="tab" data-target="polaroids">Polaroids</div>
   </div>
 
+  <!-- GALLERY CONTAINERS -->
   <div id="portraits" class="gallery active"></div>
   <div id="polaroids" class="gallery"></div>
 
+  <!-- POPUP -->
   <div id="popup">
     <img id="popup-img" src="" alt="Full Image"/>
     <div class="exif" id="popup-exif"></div>
   </div>
 
+  <!-- FOOTER -->
   <footer>
     <div class="left">PHOTOGRAPHY <span class="name">Abhisek Mohapatra</span></div>
     <div class="right">
@@ -54,7 +108,6 @@
   </footer>
 
   <script src="assets/js/exif.js"></script>
-
   <script>
     const hero = document.getElementById("hero");
     const popup = document.getElementById("popup");
@@ -140,19 +193,4 @@
         setInterval(()=>{
           slides[index].classList.remove("active");
           index = (index+1)%slides.length;
-          slides[index].classList.add("active");
-        }, HERO_INTERVAL);
-
-        // GALLERIES
-        populateGallery("portraits", data.galleryImages || [], base);
-        populateGallery("polaroids", data.polaroids || [], base);
-
-      } catch(err) {
-        console.error("Error loading manifest:", err);
-      }
-    }
-
-    initSite();
-  </script>
-</body>
-</html>
+         
