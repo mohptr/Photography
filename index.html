@@ -53,7 +53,7 @@
     .tab.active[data-target="portraits"]{ border-bottom:3px solid #20c997; }
     .tab.active[data-target="polaroids"]{ border-bottom:3px solid #ff7f50; }
 
-/* ======= GALLERY (TALVA-STYLE — ORIGINAL LOOK RESTORED) ======= */
+/* ======= GALLERY (TALVA-STYLE — FINAL SIZE UPDATE) ======= */
 .gallery {
   display: flex;
   flex-wrap: wrap;
@@ -76,8 +76,8 @@
 }
 
 .thumb img {
-  height: 325px; /* ~30% taller than before */
-  width: auto;   /* natural width based on image ratio */
+  height: 425px;  /* 30% taller than before */
+  width: auto;    /* preserve natural width */
   display: block;
   object-fit: cover;
   border-radius: 0; /* sharp corners */
@@ -96,7 +96,7 @@
     padding: 30px 40px;
   }
   .thumb img {
-    height: 260px;
+    height: 340px; /* proportionally larger on tablets */
   }
 }
 
@@ -106,7 +106,7 @@
     padding: 20px;
   }
   .thumb img {
-    height: 200px;
+    height: 260px; /* proportionally larger on mobile */
   }
 }
     /* ======= POPUP ======= */
