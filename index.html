@@ -1,208 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abhisek Mohapatra Photography</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MOHPTR Photography</title>
+<style>
+/* --- BODY & HERO --- */
+body { margin:0; font-family:Arial,sans-serif; background:#000; color:#fff; overflow-x:hidden; }
+.hero { height:100vh; width:100%; position:relative; overflow:hidden; }
+.hero img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:contain; opacity:0; transition:opacity 2s ease-in-out; }
+.hero img.active { opacity:1; z-index:1; }
 
-  <style>
-    /* ======= BODY & HERO ======= */
-    body { margin:0; font-family:Arial,sans-serif; background:#000; color:#fff; overflow-x:hidden; }
-    .hero { height:100vh; width:100%; position:relative; overflow:hidden; }
-    .hero img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:contain; opacity:0; transition:opacity 2s ease-in-out; }
-    .hero img.active { opacity:1; z-index:1; }
+/* --- NAVIGATION BAR --- */
+.navbar {
+  display:flex; flex-direction:column; background:#fff; color:#000; padding:40px 80px;
+}
+.navbar-top {
+  display:flex; justify-content:flex-start; align-items:center; gap:50px;
+}
+.navbar-top .brand { font-family:'Futura',sans-serif; font-weight:bold; font-size:2rem; text-transform:uppercase; }
+.navbar-top .links { display:flex; gap:25px; font-family:'Futura',sans-serif; font-weight:400; font-size:1rem; text-transform:capitalize; }
+.navbar-top .links a { text-decoration:none; color:#000; transition:0.3s; }
+.navbar-top .links a:hover { color:#20c997; }
 
-    /* ======= TABS ======= */
-    .tabs { display:flex; justify-content:center; border-bottom:2px solid #444; margin:20px 0 0 0; }
-    .tab { padding:10px 30px; margin:0 5px; cursor:pointer; color:#aaa; font-weight:bold; transition:0.3s ease; border-bottom:3px solid transparent; }
-    @keyframes pulseTextGlow { 0%{text-shadow:0 0 5px #fff,0 0 10px #fff;} 50%{text-shadow:0 0 15px #fff,0 0 30px #fff;} 100%{text-shadow:0 0 5px #fff,0 0 10px #fff;} }
-    .tab.active { color:#fff; animation:pulseTextGlow 4s infinite; }
-    .tab.active[data-target="portraits"]{ border-bottom:3px solid #20c997; }
-    .tab.active[data-target="polaroids"]{ border-bottom:3px solid #ff7f50; }
+/* --- TABS --- */
+.tabs { display:flex; justify-content:center; margin-top:20px; }
+.tab { padding:10px 30px; margin:0 5px; cursor:pointer; color:#aaa; font-weight:bold; transition:0.3s ease; border-bottom:3px solid transparent; }
+.tab.active { color:#000; border-bottom:3px solid #20c997; }
 
-    /* ======= TALVA-LIKE GALLERY ======= */
-    .gallery {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:25px;
-      background:#fff;
-      padding:60px 80px;
-      display:none;
-    }
-    .gallery.active { display:grid; }
+/* --- GALLERY (Masonry/TALVA style) --- */
+.gallery {
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+  grid-auto-rows:10px;
+  gap:25px;
+  padding:20px 80px 60px 80px;
+  background:#fff;
+}
+.thumb {
+  width:100%;
+  position:relative;
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.thumb img { width:100%; height:auto; display:block; }
+.thumb:hover { transform:scale(1.05); box-shadow:0 4px 15px rgba(0,0,0,0.15); }
 
-    .thumb {
-      width:100%;
-      padding-top:75%;
-      position:relative;
-      overflow:hidden;
-      border-radius:6px;
-      box-shadow:0 2px 10px rgba(0,0,0,0.08);
-      background:#f8f8f8;
-      transition:transform 0.3s ease, box-shadow 0.3s ease;
-    }
+/* --- POPUP --- */
+#popup { position:fixed; top:0; left:0; width:100%; height:100%; display:none; z-index:1001; justify-content:center; align-items:center; background:rgba(0,0,0,0.3); backdrop-filter:blur(10px); }
+#popup img { max-width:90vw; max-height:90vh; width:auto; height:auto; box-shadow:0 10px 30px rgba(0,0,0,0.7); border-radius:5px; }
+#popup .exif { position:absolute; bottom:10px; left:10px; color:#fff; background:rgba(0,0,0,0.5); padding:5px 10px; font-size:0.9rem; border-radius:4px; }
 
-    .thumb img {
-      position:absolute; top:0; left:0;
-      width:100%; height:100%;
-      object-fit:cover;
-      transition:transform 0.4s ease, filter 0.3s ease;
-    }
-
-    .thumb:hover {
-      transform:scale(1.03);
-      cursor:pointer;
-      box-shadow:0 6px 20px rgba(0,0,0,0.12);
-    }
-
-    /* ======= POPUP ======= */
-    #popup { position:fixed; top:0; left:0; width:100%; height:100%; display:none; z-index:1001; justify-content:center; align-items:center; background:rgba(0,0,0,0.3); backdrop-filter:blur(10px); }
-    #popup img { max-width:90vw; max-height:90vh; width:auto; height:auto; box-shadow:0 10px 30px rgba(0,0,0,0.7); border-radius:5px; }
-    #popup .exif { position:absolute; bottom:10px; left:10px; color:#fff; background:rgba(0,0,0,0.5); padding:5px 10px; font-size:0.9rem; border-radius:4px; }
-
-    /* ======= FOOTER ======= */
-    footer { background-color:#1a1a1a; padding:40px; display:flex; justify-content:space-between; align-items:center; font-weight:300; letter-spacing:1.5px; font-size:1rem; }
-    footer .left { color:#fff; } footer .left .name { color:#b3b3b3; margin-left:5px; }
-    footer .right a { text-decoration:none; font-weight:bold; color:#fff; font-size:1rem; border:2px solid orange; padding:10px 22px; border-radius:50px; background:#1a1a1a; margin-left:15px; transition:0.3s ease; }
-    footer .right a:hover { border-color:#fff; background:#20c997; color:#fff; }
-  </style>
+/* --- FOOTER --- */
+footer { background-color:#fff; padding:60px 80px; display:flex; justify-content:space-between; align-items:center; font-weight:300; font-size:1rem; color:#000; }
+footer .left, footer .right a { color:#000; text-decoration:none; }
+footer .left { font-family:'Futura',sans-serif; font-weight:bold; }
+footer .right a { margin-left:25px; font-family:'Futura',sans-serif; font-weight:400; font-size:1rem; transition:0.3s; }
+footer .right a:hover { color:#20c997; }
+</style>
 </head>
+
 <body>
+<div class="hero" id="hero"></div>
 
-  <!-- HERO SECTION -->
-  <div class="hero" id="hero"></div>
+<!-- NAVIGATION BAR -->
+<div class="navbar">
+  <div class="navbar-top">
+    <div class="brand">MOHPTR</div>
+    <div class="links">
+      <a href="https://www.TheAbhisek.com" target="_blank">About</a>
+      <a href="https://www.TheAbhisek.com/journal" target="_blank">Journal</a>
+      <a href="https://www.TheAbhisek.com/contact" target="_blank">Contact</a>
+    </div>
+  </div>
 
-  <!-- TABS -->
+  <!-- Portrait/Polaroid tabs -->
   <div class="tabs">
     <div class="tab active" data-target="portraits">Portraits</div>
     <div class="tab" data-target="polaroids">Polaroids</div>
   </div>
+</div>
 
-  <!-- GALLERIES -->
-  <div id="portraits" class="gallery active"></div>
-  <div id="polaroids" class="gallery"></div>
+<!-- GALLERIES -->
+<div id="portraits" class="gallery active"></div>
+<div id="polaroids" class="gallery"></div>
 
-  <!-- POPUP -->
-  <div id="popup">
-    <img id="popup-img" src="" alt="Full Image"/>
-    <div class="exif" id="popup-exif"></div>
+<!-- POPUP -->
+<div id="popup">
+  <img id="popup-img" src="" alt="Full Image"/>
+  <div class="exif" id="popup-exif"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="left">MOHPTR</div>
+  <div class="right">
+    <a href="https://www.TheAbhisek.com" target="_blank">About</a>
+    <a href="https://www.TheAbhisek.com/journal" target="_blank">Journal</a>
+    <a href="https://www.TheAbhisek.com/contact" target="_blank">Contact</a>
   </div>
+</footer>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="left">PHOTOGRAPHY <span class="name">Abhisek Mohapatra</span></div>
-    <div class="right">
-      <a href="https://www.TheAbhisek.com" target="_blank">About</a>
-      <a href="https://www.TheAbhisek.com/contact" target="_blank">Contact</a>
-    </div>
-  </footer>
+<script src="assets/js/exif.js"></script>
+<script>
+const hero = document.getElementById("hero");
+const popup = document.getElementById("popup");
+const popupImg = document.getElementById("popup-img");
+const popupExif = document.getElementById("popup-exif");
+const HERO_INTERVAL = 10000;
 
-  <!-- EXIF JS -->
-  <script src="assets/js/exif.js"></script>
+const tabs = document.querySelectorAll(".tab");
+const galleries = document.querySelectorAll(".gallery");
 
-  <!-- ======= MAIN SCRIPT ======= -->
-  <script>
-    const hero = document.getElementById("hero");
-    const popup = document.getElementById("popup");
-    const popupImg = document.getElementById("popup-img");
-    const popupExif = document.getElementById("popup-exif");
-    const HERO_INTERVAL = 10000;
+// --- TABS LOGIC ---
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    tabs.forEach(t => t.classList.remove("active"));
+    galleries.forEach(g => g.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.target).classList.add("active");
+    resizeAllGridItems();
+  });
+});
 
-    const tabs = document.querySelectorAll(".tab");
-    const galleries = document.querySelectorAll(".gallery");
+// --- GALLERY POPULATION & EXIF ---
+function populateGallery(containerId, images, baseUrl) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  images.forEach(src => {
+    const article = document.createElement("article");
+    article.className = "thumb";
+    const img = document.createElement("img");
+    img.src = baseUrl + src;
+    article.appendChild(img);
+    container.appendChild(article);
 
-    // TABS FUNCTION
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        galleries.forEach(g => g.classList.remove("active"));
-        tab.classList.add("active");
-        document.getElementById(tab.dataset.target).classList.add("active");
-      });
-    });
+    img.addEventListener("click", () => {
+      popupImg.src = img.src;
+      popupExif.innerText = "";
 
-    // POPULATE GALLERY FUNCTION
-    function populateGallery(containerId, images, baseUrl) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-      images.forEach(src => {
-        const article = document.createElement("article");
-        article.className = "thumb";
-        const img = document.createElement("img");
-        img.src = baseUrl + src;
-        article.appendChild(img);
-        container.appendChild(article);
-
-        img.addEventListener("click", () => {
-          popupImg.src = img.src;
-          popupExif.innerText = "";
-
-          // Only read EXIF for Portraits
-          if(containerId === "portraits") {
-            try {
-              const isSameOrigin = new URL(img.src).origin === window.location.origin;
-              if (isSameOrigin) {
-                EXIF.getData(img, function() {
-                  const model = EXIF.getTag(this, "Model");
-                  const fnumber = EXIF.getTag(this, "FNumber");
-                  const exposure = EXIF.getTag(this, "ExposureTime");
-                  const iso = EXIF.getTag(this, "ISOSpeedRatings");
-                  const exifParts = [];
-                  if(model) exifParts.push(`Model: ${model}`);
-                  if(fnumber) exifParts.push(`FNumber: ${fnumber}`);
-                  if(exposure) exifParts.push(`Exposure: ${exposure}`);
-                  if(iso) exifParts.push(`ISO: ${iso}`);
-                  popupExif.innerText = exifParts.join(' | ');
-                });
-              }
-            } catch(e) {
-              console.warn("Skipping EXIF for cross-origin image:", img.src);
-            }
+      if(containerId === "portraits") {
+        try {
+          const isSameOrigin = new URL(img.src).origin === window.location.origin;
+          if(isSameOrigin) {
+            EXIF.getData(img, function() {
+              const model = EXIF.getTag(this,"Model");
+              const fnumber = EXIF.getTag(this,"FNumber");
+              const exposure = EXIF.getTag(this,"ExposureTime");
+              const iso = EXIF.getTag(this,"ISOSpeedRatings");
+              const exifParts=[];
+              if(model) exifParts.push(`Model: ${model}`);
+              if(fnumber) exifParts.push(`FNumber: ${fnumber}`);
+              if(exposure) exifParts.push(`Exposure: ${exposure}`);
+              if(iso) exifParts.push(`ISO: ${iso}`);
+              popupExif.innerText = exifParts.join(' | ');
+            });
           }
+        } catch(e){ console.warn("Skipping EXIF for cross-origin image:", img.src);}
+      }
 
-          popup.style.display = "flex";
-        });
-      });
-    }
+      popup.style.display="flex";
+    });
+  });
+}
 
-    popup.addEventListener("click", e => {
-      if(e.target === popup) popup.style.display="none";
+// --- POPUP CLOSE ---
+popup.addEventListener("click", e => {
+  if(e.target === popup) popup.style.display="none";
+});
+
+// --- MASONRY GRID FUNCTIONS ---
+function resizeGridItem(item) {
+  const grid = document.querySelector('.gallery');
+  const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+  const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('gap'));
+  const contentHeight = item.querySelector('img').getBoundingClientRect().height;
+  const rowSpan = Math.ceil((contentHeight + rowGap) / (rowHeight + rowGap));
+  item.style.gridRowEnd = "span " + rowSpan;
+}
+
+function resizeAllGridItems() {
+  const allItems = document.querySelectorAll('.thumb');
+  allItems.forEach(item => resizeGridItem(item));
+}
+
+// --- INITIALIZATION ---
+async function initSite() {
+  try {
+    const res = await fetch("manifest.json");
+    const data = await res.json();
+    const base = data.baseUrl || "";
+
+    // HERO
+    data.heroImages.forEach((src,i)=>{
+      const img = document.createElement("img");
+      img.src = base + src;
+      if(i===0) img.classList.add("active");
+      hero.appendChild(img);
+    });
+    let index=0;
+    const slides = hero.querySelectorAll("img");
+    setInterval(()=>{
+      slides[index].classList.remove("active");
+      index=(index+1)%slides.length;
+      slides[index].classList.add("active");
+    }, HERO_INTERVAL);
+
+    // GALLERIES
+    populateGallery("portraits", data.galleryImages || [], base);
+    populateGallery("polaroids", data.polaroids || [], base);
+
+    // Resize masonry after images load
+    const allImgs=document.querySelectorAll('.gallery .thumb img');
+    allImgs.forEach(img=>{
+      img.addEventListener('load', resizeAllGridItems);
     });
 
-    // INIT SITE
-    async function initSite() {
-      try {
-        const res = await fetch("manifest.json");
-        const data = await res.json();
-        const base = data.baseUrl || "";
+    window.addEventListener('resize', resizeAllGridItems);
 
-        // HERO IMAGES
-        data.heroImages.forEach((src,i)=>{
-          const img = document.createElement("img");
-          img.src = base + src;
-          if(i===0) img.classList.add("active");
-          hero.appendChild(img);
-        });
+  } catch(err) {
+    console.error("Error loading manifest:", err);
+  }
+}
 
-        // HERO SLIDESHOW
-        let index = 0;
-        const slides = hero.querySelectorAll("img");
-        setInterval(()=>{
-          slides[index].classList.remove("active");
-          index = (index+1)%slides.length;
-          slides[index].classList.add("active");
-        }, HERO_INTERVAL);
-
-        // GALLERIES
-        populateGallery("portraits", data.galleryImages || [], base);
-        populateGallery("polaroids", data.polaroids || [], base);
-
-      } catch(err) {
-        console.error("Error loading manifest:", err);
-      }
-    }
-
-    initSite();
-  </script>
+initSite();
+</script>
 </body>
 </html>
