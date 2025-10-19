@@ -79,12 +79,15 @@
 }
 
 @media (max-width: 768px) {
+  /* Move NAVBAR above HERO */
+  body { display: flex; flex-direction: column; }
+  .navbar { order: -1; padding: 20px 15px; }
+
   /* HERO */
-  .hero { height: 40vh; background-color: #fff;} /* reduced further for mobile */
+  .hero { height: 40vh; background-color: #fff; } /* reduced further for mobile */
   .hero img { object-fit: contain; } /* ensures full image is visible */
 
-  /* NAVBAR */
-  .navbar { padding: 20px 15px; }
+  /* NAVBAR content scaling */
   .navbar-top { flex-wrap: wrap; justify-content: space-between; gap: 15px; }
   .navbar-top .brand { font-size: 1.5rem; }
   .navbar-top .links { gap: 10px; font-size: 0.9rem; }
