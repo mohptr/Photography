@@ -73,13 +73,8 @@
     footer .right a:hover { color:#20c997; }
 
 /* ======= RESPONSIVE ADJUSTMENTS ======= */
-@media (max-width: 1024px) {
-  .gallery { gap: 15px; padding: 30px 40px; }
-  .thumb img { height: 340px; }
-}
-
 @media (max-width: 768px) {
-  /* Move NAVBAR above HERO */
+  /* Move only NAVBAR above HERO */
   body { display: flex; flex-direction: column; }
   .navbar { order: -1; padding: 20px 15px; }
 
@@ -92,9 +87,8 @@
   .navbar-top .brand { font-size: 1.5rem; }
   .navbar-top .links { gap: 10px; font-size: 0.9rem; }
 
-  /* TABS */
+  /* TABS - keep below hero */
   .tabs { flex-wrap: nowrap; overflow-x: auto; padding: 0 10px; }
-  .tab { padding: 8px 20px; font-size: 0.9rem; }
 
   /* GALLERY */
   .gallery { gap: 10px; padding: 20px 15px 40px 15px; }
