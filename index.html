@@ -307,32 +307,39 @@ body {
 
     initSite();
   </script>
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const hero = document.querySelector(".hero");
-  const heroImg = hero.querySelector("img");
-  const colorThief = new ColorThief();
+<script>
+const heroElement = document.querySelector(".hero");
+const colorThief = new ColorThief();
 
-  // Function to update background color
-  function updateHeroBackground() {
-    if (heroImg.complete) {
-      try {
-        const color = colorThief.getColor(heroImg);
-        hero.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-      } catch (err) {
-        console.warn("Could not extract color:", err);
-      }
-    } else {
-      heroImg.addEventListener("load", updateHeroBackground);
+function updateHeroBg() {
+  const activeImg = heroElement.querySelector("img.active");
+  if (!activeImg) return;
+
+  if (activeImg.complete) {
+    try {
+      const color = colorThief.getColor(activeImg);
+      heroElement.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+    } catch (err) {
+      console.warn("Color extraction failed:", err);
     }
+  } else {
+    activeImg.addEventListener("load", updateHeroBg);
   }
+}
 
-  updateHeroBackground();
+// Hook into your slideshow
+const slides = heroElement.querySelectorAll("img");
+let index = 0;
+const HERO_INTERVAL = 10000;
 
-  // OPTIONAL: If hero images change (like a slideshow)
-  const observer = new MutationObserver(updateHeroBackground);
-  observer.observe(heroImg, { attributes: true, attributeFilter: ["src"] });
-});
+updateHeroBg(); // initial background
+
+setInterval(() => {
+  slides[index].classList.remove("active");
+  index = (index + 1) % slides.length;
+  slides[index].classList.add("active");
+  updateHeroBg(); // update background on slide change
+}, HERO_INTERVAL);
 </script>
 </body>
 </html>
