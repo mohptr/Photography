@@ -53,6 +53,43 @@
     .tab.active[data-target="portraits"]{ border-bottom:3px solid #20c997; }
     .tab.active[data-target="polaroids"]{ border-bottom:3px solid #ff7f50; }
 
+/* ======= FROSTED GLASS (Liquid Motion) ======= */
+    .frosted-glass {
+      position: relative;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .frosted-glass::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      left: 0;
+      width: 100%;
+      height: calc(100% + 80px);
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border-radius: 30px;
+      z-index: -1;
+      background-image: radial-gradient(
+          circle at 20% 20%,
+          rgba(255, 255, 255, 0.7) 0%,
+          rgba(255, 255, 255, 0.3) 30%,
+          rgba(255, 255, 255, 0.1) 100%
+      );
+      background-size: 200% 200%;
+      animation: shimmerMotion 12s ease-in-out infinite alternate;
+      transition: opacity 0.4s ease;
+      transform: translateY(var(--scroll-offset, 0));
+    }
+
+    @keyframes shimmerMotion {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 50% 100%; }
+    }
+
     /* ======= GALLERY ======= */
     .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 40px 80px 60px 80px; background: #fff; display: none; }
     .gallery.active { display: flex; }
@@ -134,10 +171,12 @@
     </div>
   </div>
 
-  <!-- GALLERIES -->
-  <div id="portraits" class="gallery active"></div>
-  <div id="polaroids" class="gallery"></div>
-
+  <!-- GALLERIES wrapped in frosted glass -->
+  <div class="frosted-glass">
+    <div id="portraits" class="gallery active"></div>
+    <div id="polaroids" class="gallery"></div>
+  </div>
+  
   <!-- POPUP -->
   <div id="popup">
     <img id="popup-img" src="" alt="Full Image"/>
@@ -255,7 +294,12 @@
         console.error("Error loading manifest:", err);
       }
     }
-
+    // Subtle scroll-linked parallax for frosted glass
+    window.addEventListener('scroll', () => {
+      const fg = document.querySelector('.frosted-glass');
+      const scrollY = window.scrollY;
+      fg.style.setProperty('--scroll-offset', `${scrollY * 0.1}px`);
+    });
     initSite();
   </script>
 </body>
