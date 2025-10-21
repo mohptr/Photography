@@ -42,6 +42,9 @@
     background-color: #000; /* Black background for desktop screens */
   }
 }
+.hero {
+  transition: background-color 1s ease-in-out;
+}
     /* ======= NAVBAR ======= */
     .navbar { display:flex; flex-direction:column; background:#fff; color:#000; padding:40px 80px; }
     .navbar-top { display:flex; justify-content:flex-start; align-items:center; gap:50px; }
@@ -201,6 +204,7 @@ body {
 
   <!-- SCRIPTS -->
   <script src="assets/js/exif.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
   <script>
     const hero = document.getElementById("hero");
     const HERO_INTERVAL = 10000;
@@ -303,5 +307,32 @@ body {
 
     initSite();
   </script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const hero = document.querySelector(".hero");
+  const heroImg = hero.querySelector("img");
+  const colorThief = new ColorThief();
+
+  // Function to update background color
+  function updateHeroBackground() {
+    if (heroImg.complete) {
+      try {
+        const color = colorThief.getColor(heroImg);
+        hero.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+      } catch (err) {
+        console.warn("Could not extract color:", err);
+      }
+    } else {
+      heroImg.addEventListener("load", updateHeroBackground);
+    }
+  }
+
+  updateHeroBackground();
+
+  // OPTIONAL: If hero images change (like a slideshow)
+  const observer = new MutationObserver(updateHeroBackground);
+  observer.observe(heroImg, { attributes: true, attributeFilter: ["src"] });
+});
+</script>
 </body>
 </html>
