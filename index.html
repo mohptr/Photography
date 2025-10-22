@@ -29,9 +29,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Futura:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
-    html, body {
-  transition: background-color 1s ease-in-out;
-}
     /* ======= BODY & GENERAL ======= */
     body { margin:0; font-family:'Futura',sans-serif; background:#000; color:#fff; overflow-x:hidden; }
 
@@ -44,9 +41,6 @@
   .hero {
     background-color: #000; /* Black background for desktop screens */
   }
-}
-.hero {
-  transition: background-color 1s ease-in-out;
 }
     /* ======= NAVBAR ======= */
     .navbar { display:flex; flex-direction:column; background:#fff; color:#000; padding:40px 80px; }
@@ -207,58 +201,26 @@ body {
 
   <!-- SCRIPTS -->
   <script src="assets/js/exif.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
   <script>
     const hero = document.getElementById("hero");
     const HERO_INTERVAL = 10000;
 
-async function initHero(heroImages, baseUrl) {
-  const heroElement = document.getElementById("hero");
-  const colorThief = new ColorThief();
+    async function initHero(heroImages, baseUrl) {
+      heroImages.forEach((src,i)=>{
+        const img = document.createElement("img");
+        img.src = baseUrl + src;
+        if(i===0) img.classList.add("active");
+        hero.appendChild(img);
+      });
 
-  // Create and append hero images
-  heroImages.forEach((src, i) => {
-    const img = document.createElement("img");
-    img.src = baseUrl + src;
-    if (i === 0) img.classList.add("active");
-    heroElement.appendChild(img);
-  });
-
-  const slides = heroElement.querySelectorAll("img");
-  let index = 0;
-
-  // Function to extract and update hero background color
-function updateHeroBg() {
-  const activeImg = heroElement.querySelector("img.active");
-  if (!activeImg) return;
-
-  if (activeImg.complete) {
-    try {
-      const color = colorThief.getColor(activeImg);
-      const rgb = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-      
-      // Apply dominant color to hero, body, and html
-      heroElement.style.backgroundColor = rgb;
-      document.body.style.backgroundColor = rgb;
-      document.documentElement.style.backgroundColor = rgb;
-    } catch (err) {
-      console.warn("Color extraction failed:", err);
+      let index = 0;
+      const slides = hero.querySelectorAll("img");
+      setInterval(()=>{
+        slides[index].classList.remove("active");
+        index = (index+1)%slides.length;
+        slides[index].classList.add("active");
+      }, HERO_INTERVAL);
     }
-  } else {
-    activeImg.addEventListener("load", updateHeroBg);
-  }
-}
-
-  updateHeroBg(); // Initial background
-
-  // Slideshow with background update
-  setInterval(() => {
-    slides[index].classList.remove("active");
-    index = (index + 1) % slides.length;
-    slides[index].classList.add("active");
-    updateHeroBg(); // Refresh background
-  }, HERO_INTERVAL);
-}
 
     const tabs = document.querySelectorAll(".tab");
     const galleries = document.querySelectorAll(".gallery");
