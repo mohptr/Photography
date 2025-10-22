@@ -142,7 +142,29 @@ body {
     footer .left { font-family:'Futura',sans-serif; font-weight:bold; }
     footer .right a { margin-left:25px; font-family:'Futura',sans-serif; font-weight:400; font-size:1rem; transition:0.3s; }
     footer .right a:hover { color:#20c997; }
+/* X logo - desktop only */
+.x-logo {
+  display: block; /* visible on desktop */
+  margin-left: auto; /* push it to the far right */
+}
 
+.x-logo img {
+  height: 32px; /* adjust as needed */
+  width: auto;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.x-logo img:hover {
+  transform: scale(1.1); /* subtle hover effect */
+}
+
+/* Hide X logo on tablets & mobile */
+@media (max-width: 1024px) {
+  .x-logo {
+    display: none;
+  }
+}
 /* ======= RESPONSIVE ADJUSTMENTS ======= */
 
 /* Tablet */
@@ -295,6 +317,9 @@ body {
         <a href="https://www.TheAbhisek.com" target="_blank">About</a>
         <a href="https://www.TheAbhisek.com/journal" target="_blank">Journal</a>
         <a href="https://www.TheAbhisek.com/contact" target="_blank">Contact</a>
+          <a href="https://x.com/mohptr" target="_blank" class="x-logo">
+    <img src="assets/Xlogo.png" alt="X Logo" />
+  </a>
       </div>
     </div>
 
