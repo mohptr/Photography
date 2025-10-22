@@ -34,8 +34,22 @@
 
     /* ======= HERO ======= */
     .hero { height:100vh; width:100%; position:relative; overflow:hidden; }
-    .hero img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:contain; opacity:0;}
-    .hero img.active { opacity:1; z-index:1; }
+.hero img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+  z-index: 2; /* ensure images are above the video */
+}
+
+.hero img.active {
+  opacity: 1;
+  z-index: 3; /* active image stays on top during fade */
+}
     .hero video {
   position: absolute;
   top: 0;
@@ -217,22 +231,33 @@ body {
     const hero = document.getElementById("hero");
     const HERO_INTERVAL = 10000;
 
-    async function initHero(heroImages, baseUrl) {
-      heroImages.forEach((src,i)=>{
-        const img = document.createElement("img");
-        img.src = baseUrl + src;
-        if(i===0) img.classList.add("active");
-        hero.appendChild(img);
-      });
+ async function initHero(heroImages, baseUrl) {
+  heroImages.forEach((src, i) => {
+    const img = document.createElement("img");
+    img.src = baseUrl + src;
+    if(i === 0) img.classList.add("active");
+    hero.appendChild(img);
+  });
 
-      let index = 0;
-      const slides = hero.querySelectorAll("img");
-      setInterval(()=>{
-        slides[index].classList.remove("active");
-        index = (index+1)%slides.length;
-        slides[index].classList.add("active");
-      }, HERO_INTERVAL);
-    }
+  let index = 0;
+  const slides = hero.querySelectorAll("img");
+
+  setInterval(() => {
+    const current = slides[index];
+    index = (index + 1) % slides.length;
+    const next = slides[index];
+
+    // Place next image on top with 0 opacity
+    next.style.opacity = 0;
+    next.classList.add("active");
+
+    // Trigger fade-in
+    setTimeout(() => next.style.opacity = 1, 50);
+
+    // Remove active from old image after fade duration
+    setTimeout(() => current.classList.remove("active"), 2000);
+  }, HERO_INTERVAL);
+}
 
     const tabs = document.querySelectorAll(".tab");
     const galleries = document.querySelectorAll(".gallery");
