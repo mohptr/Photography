@@ -29,6 +29,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Futura:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
+    html, body {
+  transition: background-color 1s ease-in-out;
+}
     /* ======= BODY & GENERAL ======= */
     body { margin:0; font-family:'Futura',sans-serif; background:#000; color:#fff; overflow-x:hidden; }
 
@@ -225,21 +228,26 @@ async function initHero(heroImages, baseUrl) {
   let index = 0;
 
   // Function to extract and update hero background color
-  function updateHeroBg() {
-    const activeImg = heroElement.querySelector("img.active");
-    if (!activeImg) return;
+function updateHeroBg() {
+  const activeImg = heroElement.querySelector("img.active");
+  if (!activeImg) return;
 
-    if (activeImg.complete) {
-      try {
-        const color = colorThief.getColor(activeImg);
-        heroElement.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-      } catch (err) {
-        console.warn("Color extraction failed:", err);
-      }
-    } else {
-      activeImg.addEventListener("load", updateHeroBg);
+  if (activeImg.complete) {
+    try {
+      const color = colorThief.getColor(activeImg);
+      const rgb = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+      
+      // Apply dominant color to hero, body, and html
+      heroElement.style.backgroundColor = rgb;
+      document.body.style.backgroundColor = rgb;
+      document.documentElement.style.backgroundColor = rgb;
+    } catch (err) {
+      console.warn("Color extraction failed:", err);
     }
+  } else {
+    activeImg.addEventListener("load", updateHeroBg);
   }
+}
 
   updateHeroBg(); // Initial background
 
