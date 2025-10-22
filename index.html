@@ -144,36 +144,34 @@ body {
     footer .right a:hover { color:#20c997; }
 
     /* ======= RESPONSIVE ADJUSTMENTS ======= */
-    @media (max-width: 1024px) {
-      .gallery { gap: 15px; padding: 30px 40px; }
-      .thumb img { height: 340px; }
-    }
+@media (max-width: 768px) {
+  body { display: flex; flex-direction: column; }
 
-    @media (max-width: 768px) {
-      body { display: flex; flex-direction: column; }
-      .navbar { order: -1; padding: 20px 15px; }
+  .hero { 
+    height: 40vh; 
+    background-color: #fff; 
+    order: 0; /* ensure hero comes first */
+  }
 
-      .hero { height: 40vh; background-color: #fff; }
-      .hero img { object-fit: contain; }
+  .navbar { 
+    order: 1; /* move navbar below hero */
+    padding: 20px 15px; 
+  }
 
-      .navbar-top { flex-wrap: wrap; justify-content: space-between; gap: 15px; }
-      .navbar-top .brand { font-size: 1.5rem; }
-      .navbar-top .links { gap: 10px; font-size: 0.9rem; }
+  .navbar-top { flex-wrap: wrap; justify-content: space-between; gap: 15px; }
+  .navbar-top .brand { font-size: 1.5rem; }
+  .navbar-top .links { gap: 10px; font-size: 0.9rem; }
 
-      .tabs { flex-wrap: nowrap; overflow-x: auto; padding: 0 10px; }
-      .tab { padding: 8px 20px; font-size: 0.9rem; }
+  .tabs { flex-wrap: nowrap; overflow-x: auto; padding: 0 10px; }
+  .tab { padding: 8px 20px; font-size: 0.9rem; }
 
-      .gallery { gap: 10px; padding: 20px 15px 40px 15px; }
-      .thumb img { height: 140px; }
+  .gallery { gap: 10px; padding: 20px 15px 40px 15px; }
+  .thumb img { height: 140px; }
 
-      footer { flex-direction: column; padding: 60px 15px; text-align: center; gap: 15px; }
-      footer .right { margin-top: 10px; }
-      footer .right a { margin-left: 10px; font-size: 0.9rem; }
-    }
-
-    @media (max-width: 600px) {
-      .thumb img { height: 120px; }
-    }
+  footer { flex-direction: column; padding: 60px 15px; text-align: center; gap: 15px; }
+  footer .right { margin-top: 10px; }
+  footer .right a { margin-left: 10px; font-size: 0.9rem; }
+}
   </style>
 </head>
 
