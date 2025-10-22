@@ -62,7 +62,7 @@
 .hero img {
   z-index: 1; /* slides stay above video */
 }
-/* ======= HERO BACKGROUND (Black for Desktop Only) ======= */
+
 
     /* ======= NAVBAR ======= */
     .navbar { display:flex; flex-direction:column; background:#fff; color:#000; padding:40px 80px; }
@@ -220,6 +220,28 @@ body {
 /* Extra small mobile */
 @media (max-width: 600px) {
   .thumb img { height: 120px; }
+}
+/* ======= FIX NAVBAR VISIBILITY ON MOBILE ======= */
+@media (max-width: 768px) {
+  .hero {
+    z-index: 0 !important;
+  }
+
+  .hero img,
+  .hero video {
+    z-index: 0 !important;
+  }
+
+  .navbar, 
+  .tabs {
+    position: relative !important;
+    z-index: 10 !important; /* bring above hero */
+    background: #fff; /* ensures visible even if hero is light */
+  }
+
+  .tab {
+    color: #000; /* make sure text isn’t hidden on white */
+  }
 }
   </style>
 </head>
