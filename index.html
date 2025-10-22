@@ -143,34 +143,83 @@ body {
     footer .right a { margin-left:25px; font-family:'Futura',sans-serif; font-weight:400; font-size:1rem; transition:0.3s; }
     footer .right a:hover { color:#20c997; }
 
-    /* ======= RESPONSIVE ADJUSTMENTS ======= */
-@media (max-width: 768px) {
-  body { display: flex; flex-direction: column; }
+/* ======= RESPONSIVE ADJUSTMENTS ======= */
 
+/* Tablet */
+@media (max-width: 1024px) {
+  .gallery { gap: 15px; padding: 30px 40px; }
+  .thumb img { height: 340px; }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  body { 
+    display: flex; 
+    flex-direction: column; 
+  }
+
+  /* HERO */
   .hero { 
     height: 40vh; 
     background-color: #fff; 
-    order: 0; /* ensure hero comes first */
+    order: 0; 
+    position: relative; 
+    z-index: 0; /* hero below navbar */
+  }
+  .hero img { 
+    object-fit: contain; 
   }
 
+  /* NAVBAR */
   .navbar { 
-    order: 1; /* move navbar below hero */
+    order: 1; 
     padding: 20px 15px; 
+    position: relative; 
+    z-index: 1; /* ensure navbar is above hero */
   }
-
-  .navbar-top { flex-wrap: wrap; justify-content: space-between; gap: 15px; }
+  .navbar-top { 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    gap: 15px; 
+  }
   .navbar-top .brand { font-size: 1.5rem; }
   .navbar-top .links { gap: 10px; font-size: 0.9rem; }
 
-  .tabs { flex-wrap: nowrap; overflow-x: auto; padding: 0 10px; }
-  .tab { padding: 8px 20px; font-size: 0.9rem; }
+  /* TABS */
+  .tabs { 
+    order: 2; 
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
+    padding: 10px; 
+    margin-top: 10px; 
+    z-index: 1;
+  }
+  .tab { 
+    padding: 8px 20px; 
+    font-size: 0.9rem; 
+  }
 
-  .gallery { gap: 10px; padding: 20px 15px 40px 15px; }
+  /* GALLERY */
+  .gallery { 
+    gap: 10px; 
+    padding: 20px 15px 40px 15px; 
+  }
   .thumb img { height: 140px; }
 
-  footer { flex-direction: column; padding: 60px 15px; text-align: center; gap: 15px; }
+  /* FOOTER */
+  footer { 
+    flex-direction: column; 
+    padding: 60px 15px; 
+    text-align: center; 
+    gap: 15px; 
+  }
   footer .right { margin-top: 10px; }
   footer .right a { margin-left: 10px; font-size: 0.9rem; }
+}
+
+/* Extra small mobile */
+@media (max-width: 600px) {
+  .thumb img { height: 120px; }
 }
   </style>
 </head>
