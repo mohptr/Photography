@@ -447,19 +447,14 @@ async function initHero(heroImages, baseUrl) {
       hero.appendChild(img);
     });
 
-    let index = 0;
-    const slides = hero.querySelectorAll("img");
+let index = 0;
+const slides = hero.querySelectorAll("img");
 
-    setInterval(() => {
-      const current = slides[index];
-      index = (index + 1) % slides.length;
-      const next = slides[index];
-
-      next.style.opacity = 0;
-      next.classList.add("active");
-      setTimeout(() => next.style.opacity = 1, 50);
-      setTimeout(() => current.classList.remove("active"), 2000);
-    }, HERO_INTERVAL);
+setInterval(() => {
+  slides[index].classList.remove("active");
+  index = (index + 1) % slides.length;
+  slides[index].classList.add("active");
+}, HERO_INTERVAL);
   }
 }
 
