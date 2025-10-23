@@ -395,6 +395,7 @@ async function initHero(heroImages, baseUrl) {
   const isMobile = window.innerWidth <= 768;
 
   if (isMobile) {
+    // Mobile: dynamically append images one by one
     let index = 0;
 
     const firstImg = new Image();
@@ -408,14 +409,7 @@ async function initHero(heroImages, baseUrl) {
     firstImg.style.objectFit = "contain";
     firstImg.style.transition = "opacity 2s ease-in-out";
     hero.appendChild(firstImg);
-/*
-    const video = hero.querySelector("video");
-    if (video) {
-      video.pause();
-      video.removeAttribute("src");
-      video.load();
-    }
-*/
+
     setInterval(() => {
       index = (index + 1) % heroImages.length;
       const nextImg = new Image();
@@ -440,21 +434,32 @@ async function initHero(heroImages, baseUrl) {
     }, HERO_INTERVAL);
 
   } else {
+    // Desktop: overlapping fade like old version
     heroImages.forEach((src, i) => {
       const img = document.createElement("img");
       img.src = baseUrl + src;
-      if (i === 0) img.classList.add("active");
+      if(i === 0) img.classList.add("active");
       hero.appendChild(img);
     });
 
-let index = 0;
-const slides = hero.querySelectorAll("img");
+    let index = 0;
+    const slides = hero.querySelectorAll("img");
 
-setInterval(() => {
-  slides[index].classList.remove("active");
-  index = (index + 1) % slides.length;
-  slides[index].classList.add("active");
-}, HERO_INTERVAL);
+    setInterval(() => {
+      const current = slides[index];
+      index = (index + 1) % slides.length;
+      const next = slides[index];
+
+      // Layer next image on top
+      next.style.opacity = 0;
+      next.classList.add("active");
+
+      // Trigger fade-in
+      setTimeout(() => next.style.opacity = 1, 50);
+
+      // Remove old image after fade
+      setTimeout(() => current.classList.remove("active"), 2000);
+    }, HERO_INTERVAL);
   }
 }
 
