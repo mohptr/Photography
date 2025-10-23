@@ -413,14 +413,14 @@ async function initHero(heroImages, baseUrl) {
     firstImg.style.objectFit = "contain";
     firstImg.style.transition = "opacity 2s ease-in-out";
     hero.appendChild(firstImg);
-
+/*
     const video = hero.querySelector("video");
     if (video) {
       video.pause();
       video.removeAttribute("src");
       video.load();
     }
-
+*/
     setInterval(() => {
       index = (index + 1) % heroImages.length;
       const nextImg = new Image();
