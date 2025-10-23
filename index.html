@@ -307,6 +307,29 @@ body {
     height: 120px;
   }
 }
+@media (max-width: 768px) {
+  /* Optimize hero visuals */
+  .hero video {
+    display: none !important;
+  }
+
+  .hero img {
+    image-rendering: auto;
+    will-change: opacity;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    transition: opacity 0.4s ease-in-out;
+  }
+
+  .hero {
+    background-color: #000;
+  }
+
+  * {
+    animation-duration: 0.6s !important;
+    animation-timing-function: ease-out !important;
+  }
+}
   </style>
 </head>
 
@@ -477,5 +500,42 @@ body {
 
     initSite();
   </script>
+ /* ======= RESPONSIVE ADJUSTMENTS ======= */ 
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.innerWidth <= 768) {
+    // Force lower image memory usage on mobile
+    const heroImgs = document.querySelectorAll(".hero img");
+    heroImgs.forEach(img => {
+      // Lazy-load + async decode
+      img.loading = "lazy";
+      img.decoding = "async";
+
+      // Dynamically serve smaller image if possible
+      if (img.src.includes("pcloud") || img.src.includes(".jpg") || img.src.includes(".png")) {
+        const url = new URL(img.src);
+        // append a compression param (pCloud & most CDNs ignore if unsupported)
+        url.searchParams.set("mobile", "true");
+        img.src = url.toString();
+      }
+
+      // Free memory after fade-out
+      img.addEventListener("transitionend", () => {
+        if (getComputedStyle(img).opacity === "0") {
+          img.removeAttribute("src");
+        }
+      });
+    });
+
+    // Disable and unload background video
+    const video = document.querySelector(".hero video");
+    if (video) {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    }
+  }
+});
+</script>
 </body>
 </html>
