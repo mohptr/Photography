@@ -445,21 +445,24 @@ async function initHero(heroImages, baseUrl) {
     let index = 0;
     const slides = hero.querySelectorAll("img");
 
-    setInterval(() => {
-      const current = slides[index];
-      index = (index + 1) % slides.length;
-      const next = slides[index];
+setInterval(() => {
+  const current = slides[index];
+  index = (index + 1) % slides.length;
+  const next = slides[index];
 
-      // Layer next image on top
-      next.style.opacity = 0;
-      next.classList.add("active");
+  // Ensure next image sits on top
+  slides.forEach(img => {
+    img.style.zIndex = 2; // all images below
+  });
+  next.style.zIndex = 3; // topmost
 
-      // Trigger fade-in
-      setTimeout(() => next.style.opacity = 1, 50);
+  next.style.opacity = 0;
+  next.classList.add("active");
 
-      // Remove old image after fade
-      setTimeout(() => current.classList.remove("active"), 2000);
-    }, HERO_INTERVAL);
+  requestAnimationFrame(() => next.style.opacity = 1);
+
+  setTimeout(() => current.classList.remove("active"), 2000);
+}, HERO_INTERVAL);
   }
 }
 
