@@ -313,13 +313,14 @@ body {
     display: none !important;
   }
 
-  .hero img {
-    image-rendering: auto;
-    will-change: opacity;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-    transition: opacity 0.4s ease-in-out;
-  }
+.hero img {
+  image-rendering: auto;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+.hero img.active {
+  opacity: 1;
+}
 
   .hero {
     background-color: #000;
@@ -501,39 +502,29 @@ body {
     initSite();
   </script>
  /* ======= RESPONSIVE ADJUSTMENTS ======= */ 
-  <script>
+<script>
 document.addEventListener("DOMContentLoaded", () => {
   if (window.innerWidth <= 768) {
-    // Force lower image memory usage on mobile
-    const heroImgs = document.querySelectorAll(".hero img");
-    heroImgs.forEach(img => {
-      // Lazy-load + async decode
-      img.loading = "lazy";
-      img.decoding = "async";
-
-      // Dynamically serve smaller image if possible
-      if (img.src.includes("pcloud") || img.src.includes(".jpg") || img.src.includes(".png")) {
-        const url = new URL(img.src);
-        // append a compression param (pCloud & most CDNs ignore if unsupported)
-        url.searchParams.set("mobile", "true");
-        img.src = url.toString();
-      }
-
-      // Free memory after fade-out
-      img.addEventListener("transitionend", () => {
-        if (getComputedStyle(img).opacity === "0") {
-          img.removeAttribute("src");
-        }
-      });
-    });
-
-    // Disable and unload background video
+    // Disable heavy background video
     const video = document.querySelector(".hero video");
     if (video) {
       video.pause();
       video.removeAttribute("src");
       video.load();
     }
+
+    // Defer hero image fade-in until fully loaded
+    const heroImgs = document.querySelectorAll(".hero img");
+    heroImgs.forEach(img => {
+      img.loading = "lazy";
+      img.decoding = "async";
+      if (!img.complete) {
+        img.style.opacity = "0";
+        img.addEventListener("load", () => (img.style.opacity = "1"));
+      } else {
+        img.style.opacity = "1";
+      }
+    });
   }
 });
 </script>
