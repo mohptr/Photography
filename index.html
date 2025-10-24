@@ -445,21 +445,25 @@ async function initHero(heroImages, baseUrl) {
     let index = 0;
     const slides = hero.querySelectorAll("img");
 
-    setInterval(() => {
-      const current = slides[index];
-      index = (index + 1) % slides.length;
-      const next = slides[index];
+setInterval(() => {
+  const current = slides[index];
+  index = (index + 1) % slides.length;
+  const next = slides[index];
 
-      // Layer next image on top
-      next.style.opacity = 0;
-      next.classList.add("active");
+  // Reset all slides' opacity so fade-in restarts properly each loop
+  slides.forEach(img => img.style.opacity = 0);
 
-      // Trigger fade-in
-      setTimeout(() => next.style.opacity = 1, 50);
+  // Add active class to next image
+  next.classList.add("active");
 
-      // Remove old image after fade
-      setTimeout(() => current.classList.remove("active"), 2000);
-    }, HERO_INTERVAL);
+  // Trigger fade-in smoothly
+  requestAnimationFrame(() => {
+    next.style.opacity = 1;
+  });
+
+  // Remove old active class after fade completes
+  setTimeout(() => current.classList.remove("active"), 2000);
+}, HERO_INTERVAL);
   }
 }
 
