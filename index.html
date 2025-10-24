@@ -435,43 +435,24 @@ async function initHero(heroImages, baseUrl) {
 
   } else {
     // Desktop: overlapping fade like old version
-  let index = 0;
-  
-  // initially append first image
-  const firstImg = new Image();
-  firstImg.src = baseUrl + heroImages[0];
-  firstImg.style.opacity = "1";
-  firstImg.style.position = "absolute";
-  firstImg.style.top = "0";
-  firstImg.style.left = "0";
-  firstImg.style.width = "100%";
-  firstImg.style.height = "100%";
-  firstImg.style.objectFit = "contain";
-  firstImg.style.transition = "opacity 2s ease-in-out";
-  hero.appendChild(firstImg);
+setInterval(() => {
+  const current = slides[index];
+  index = (index + 1) % slides.length;
+  const next = slides[index];
 
-  setInterval(() => {
-    index = (index + 1) % heroImages.length;
-    const nextImg = new Image();
-    nextImg.src = baseUrl + heroImages[index];
-    nextImg.style.opacity = "0";
-    nextImg.style.position = "absolute";
-    nextImg.style.top = "0";
-    nextImg.style.left = "0";
-    nextImg.style.width = "100%";
-    nextImg.style.height = "100%";
-    nextImg.style.objectFit = "contain";
-    nextImg.style.transition = "opacity 2s ease-in-out";
-    hero.appendChild(nextImg);
+  // Ensure next image sits on top
+  slides.forEach(img => {
+    img.style.zIndex = 2; // all images below
+  });
+  next.style.zIndex = 3; // topmost
 
-    requestAnimationFrame(() => (nextImg.style.opacity = "1"));
+  next.style.opacity = 0;
+  next.classList.add("active");
 
-    setTimeout(() => {
-      const oldImgs = hero.querySelectorAll("img");
-      if (oldImgs.length > 1) oldImgs[0].remove();
-    }, 2000);
+  requestAnimationFrame(() => next.style.opacity = 1);
 
-  }, HERO_INTERVAL);
+  setTimeout(() => current.classList.remove("active"), 2000);
+}, HERO_INTERVAL);
   }
 }
 
