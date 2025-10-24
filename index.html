@@ -450,19 +450,21 @@ setInterval(() => {
   index = (index + 1) % slides.length;
   const next = slides[index];
 
-  // Reset all slides' opacity so fade-in restarts properly each loop
-  slides.forEach(img => img.style.opacity = 0);
-
-  // Add active class to next image
+  // Ensure next starts hidden
   next.classList.add("active");
+  next.style.opacity = "0";
 
-  // Trigger fade-in smoothly
-  requestAnimationFrame(() => {
-    next.style.opacity = 1;
-  });
+  // Trigger reflow to ensure transition happens
+  void next.offsetWidth;
 
-  // Remove old active class after fade completes
-  setTimeout(() => current.classList.remove("active"), 2000);
+  // Now fade in next image smoothly
+  next.style.opacity = "1";
+
+  // After fade duration, hide the previous one
+  setTimeout(() => {
+    current.classList.remove("active");
+    current.style.opacity = "0";
+  }, 2000);
 }, HERO_INTERVAL);
   }
 }
